@@ -5,9 +5,6 @@
 
 namespace easy
 {
-
-
-
   template<class T>
   class scoped_ptr // noncopyable
   {
