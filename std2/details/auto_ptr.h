@@ -5,8 +5,11 @@
 
 namespace STD_NAMESPACE {
 
-  template <class Y> struct auto_ptr_ref; // exposition only
-
+  template <class Y> struct auto_ptr_ref // exposition only
+  {
+	  Y * ptr;
+	  explicit auto_ptr_ref(Y *p): ptr(p){}
+  };
   template <class X> class auto_ptr {
   public:
     typedef X element_type;
@@ -25,6 +28,7 @@ namespace STD_NAMESPACE {
     explicit auto_ptr(X* p =0) throw() : px(p), owner(p ? true : false) {}
     auto_ptr(auto_ptr& u) throw() : px(u.px), owner(false) { u.swap(*this); }        
     ~auto_ptr() throw() { if (owner) delete px; }
+
 
     /* TODO conversion
     template<class Y> auto_ptr(auto_ptr<Y>&) throw();
@@ -51,6 +55,16 @@ namespace STD_NAMESPACE {
     template<class Y> operator auto_ptr_ref<Y>() throw();
     template<class Y> operator auto_ptr<Y>() throw();
     */
+	auto_ptr(auto_ptr_ref<X> ref) throw():auto_ptr(ref->ptr){}
+
+	template<class Y> operator auto_ptr_ref<Y>() throw()
+	{
+		return auto_ptr_ref<Y>(this->release);
+	}
+	template<class Y> operator auto_ptr<Y>() throw()
+	{
+		return auto_ptr<Y>(this->release());
+	}
   };
   template <> class auto_ptr<void>
   {
