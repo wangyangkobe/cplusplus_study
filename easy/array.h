@@ -31,7 +31,7 @@ namespace easy
 
     // capacity
     size_t size() const { return SIZE; }
-    bool empty() const {return SIZE = 0 };
+    bool empty() const {return SIZE == 0 };
     size_t max_size()  const { return SIZE; }
 
     // element access
