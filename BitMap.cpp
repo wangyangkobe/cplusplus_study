@@ -5,6 +5,7 @@
 #include <string.h>
 #include <iterator>
 #include <cstdlib>
+#include <random>
 using namespace std;
 /************************************************************************/
 /*                           位图算法的实现                             */
@@ -21,7 +22,7 @@ public:
 	{
 		int length = 1 + n / BITSPERWORD;
 		pData = new int[length];
-		memset(pData, 0, length);
+		memset(pData, 0, length * sizeof(int));
 	}
 	void set(int i)
 	{
@@ -137,12 +138,21 @@ private:
 	GenRandomNumber& operator=(const GenRandomNumber&);
 
 	// 生成[low, high]范围内的随机数
-	int randomRange(int low, int high)
+	/*
+        int randomRange(int low, int high)
 	{ 
 		srand(clock()); // better than srand(time(NULL))
 		return low + (RAND_MAX * rand() + rand()) % (high + 1 - low);;
 	}
-
+	*/
+        int randomRange(int low, int high)
+        {
+	  	std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> dis(low, high);
+		
+		return dis(gen);
+        }
 	static auto_ptr<GenRandomNumber> mInstance;
 };
 auto_ptr<GenRandomNumber> GenRandomNumber::mInstance;
