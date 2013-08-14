@@ -2,6 +2,11 @@
 #include <cassert>
 using namespace std;
 
+//http://www.josuttis.com/libbook/util/autoptr.hpp.html
+//1. 智能指针不能共享指向对象的所有权
+//2. 智能指针不能指向数组。因为其实现中调用的是delete而非delete[]
+//3. 智能指针不能作为容器类的元素。
+
 template <typename T>
 class auto_ptr
 {
