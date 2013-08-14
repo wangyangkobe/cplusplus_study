@@ -8,6 +8,14 @@ using namespace std;
 //3. 智能指针不能作为容器类的元素。
 
 template <typename T>
+class auto_ptr_ref
+{
+public:
+	auto_ptr_ref(T* p):m_p(p){}
+	T* m_p;
+};
+
+template <typename T>
 class auto_ptr
 {
 public:
@@ -18,6 +26,15 @@ public:
 	void reset(T* p = NULL);
 	T& operator * (){ return *m_p; }
 	T* operator -> (){ return m_p; }
+
+	template <typename Y>
+	operator auto_ptr_ref<Y> ()
+	{
+		return auto_ptr_ref<Y>(this->release());		
+	}
+
+	auto_ptr(auto_ptr_ref<T> other):m_p(other.m_p){}       
+
 	~auto_ptr()
 	{
 		if(m_p)
@@ -29,7 +46,11 @@ private:
 	T* release();
 };
 
-
+void test(auto_ptr<int> p)
+{
+	if(p.get())
+		cout<<*p<<endl;
+}
 int main()
 {
 	auto_ptr<int> p(new int(3));
@@ -48,6 +69,10 @@ int main()
 	auto_ptr<int>p3(p2);
 	cout<<*p3<<endl;
 	assert(NULL == p2.get());
+
+	test(auto_ptr<int>()); //test的参数为临时变量，当掉用test的时候会调用
+	//auto_ptr的拷贝构造函数，但是拷贝构造函数是auto_ptr的引用是左值，而test
+	//的参数为const（也就算右值）,so通过auto_ptr_ref将右值转换为左值。
 }
 
 
