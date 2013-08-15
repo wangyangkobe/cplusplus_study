@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
-using namespace std;
-
+using std::cout;
+using std::endl;
 //http://www.josuttis.com/libbook/util/autoptr.hpp.html
 //1. 智能指针不能共享指向对象的所有权
 //2. 智能指针不能指向数组。因为其实现中调用的是delete而非delete[]
@@ -24,8 +24,8 @@ public:
  	auto_ptr& operator=(auto_ptr& other);
 	T* get() const { return m_p; }
 	void reset(T* p = NULL);
-	T& operator * (){ return *m_p; }
-	T* operator -> (){ return m_p; }
+	T& operator * () const { return *m_p; }
+	T* operator -> () const { return m_p; }
 
 	template <typename Y>
 	operator auto_ptr_ref<Y> ()
@@ -37,8 +37,7 @@ public:
 
 	~auto_ptr()
 	{
-		if(m_p)
-			delete m_p;
+		delete m_p;
 		m_p = NULL;
 	}	
 private:
@@ -80,8 +79,8 @@ int main()
 template <typename T>
 T* auto_ptr<T>::release()
 {
-	T* temp = this->m_p;
-	this->m_p = NULL;
+	T* temp = m_p;
+	m_p = NULL;
 	return temp;
 }
 
