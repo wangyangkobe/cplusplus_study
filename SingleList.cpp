@@ -23,7 +23,23 @@ public:
 		for(int i =0; i < len; ++i)
 			pushElement(arr[i]);
 	}
-
+	//反转单链表
+	void ReverseList()
+	{
+		if(head ==  NULL || head->pNext == NULL)
+			return;
+		
+		Node<T>* pCur = head->pNext;
+		Node<T>* pHead = head;
+		
+		while(pCur != NULL)
+		{
+			pHead->pNext = pCur->pNext;
+			pCur->pNext = head;
+			head = pCur;
+			pCur = pHead->pNext;
+		}		
+	}
 	//在链表末端插入元素
 	void pushElement(T ele)
 	{
@@ -67,6 +83,21 @@ public:
 				pCur = pPre->pNext;
 			}
 		}
+	}
+	//查找中间元素
+	Node<T>* findMiddle()
+	{
+		if(head == NULL || head->pNext == NULL)
+			return NULL;
+
+		Node<T>* pSlow = head;
+		Node<T>* pFast = head;
+		while(pSlow != NULL && pFast->pNext->pNext != NULL)
+		{
+				pSlow = pSlow->pNext;
+				pFast = pFast->pNext->pNext;
+		}
+		return pSlow;
 	}
 	//查找元素值为ele的结点
 	Node<T>* findElement(T ele)
@@ -120,5 +151,11 @@ int main(int argc, char* argv[])
 	Node<int>* pos = slist3.findElement(11);
 	slist3.insertElement(pos, 10);
 	slist3.printList();
+
+	slist3.ReverseList();
+	slist3.printList();
+
+	Node<int> *pMid = slist3.findMiddle();
+	std::cout<<pMid->element<<std::endl;
 	return 0;
 }
